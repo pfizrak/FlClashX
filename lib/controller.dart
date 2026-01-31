@@ -896,8 +896,13 @@ class AppController {
 
       commonPrint.log(
           "Updating subscription info for current profile '${currentProfile.label}' on startup...");
-      await updateProfile(currentProfile);
-      commonPrint.log("Subscription info updated successfully");
+      if (currentProfile.autoUpdate) {
+        await updateProfile(currentProfile);
+        commonPrint.log("Subscription info updated successfully");
+      } else {
+        commonPrint.log(
+            "Auto-update disabled for current profile, skipping startup update");
+      }
     } catch (e, stackTrace) {
       commonPrint.log("Failed to update subscription info on startup: $e");
       commonPrint.log("Stack trace: $stackTrace");
