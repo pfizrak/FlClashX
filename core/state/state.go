@@ -17,6 +17,8 @@ type AndroidVpnOptions struct {
 	Ipv4Address      string         `json:"ipv4Address"`
 	Ipv6Address      string         `json:"ipv6Address"`
 	DnsServerAddress string         `json:"dnsServerAddress"`
+	IncludePackage   []string       `json:"includePackage"`
+	ExcludePackage   []string       `json:"excludePackage"`
 }
 
 type AccessControl struct {

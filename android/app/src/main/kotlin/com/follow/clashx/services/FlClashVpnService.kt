@@ -89,18 +89,53 @@ class FlClashXVpnService : VpnService(), BaseServiceInterface {
             }
             addDnsServer(options.dnsServerAddress)
             setMtu(9000)
-            options.accessControl.let { accessControl ->
-                if (accessControl.enable) {
-                    when (accessControl.mode) {
-                        AccessControlMode.acceptSelected -> {
-                            (accessControl.acceptList + packageName).forEach {
-                                addAllowedApplication(it)
-                            }
+            // Profile-level tun.include-package / tun.exclude-package take
+            // precedence over the app-level access control. Android's
+            // VpnService.Builder only permits one of allowed/disallowed, so we
+            // pick a single mode in this order: include (whitelist) > exclude
+            // (blacklist) > app-level accessControl.
+            val include = options.includePackage.orEmpty()
+            val exclude = options.excludePackage.orEmpty()
+            when {
+                include.isNotEmpty() -> {
+                    (include + packageName).distinct().forEach { pkg ->
+                        try {
+                            addAllowedApplication(pkg)
+                        } catch (_: Exception) {
+                            Log.d("VpnService", "addAllowedApplication failed: $pkg")
                         }
+                    }
+                }
+                exclude.isNotEmpty() -> {
+                    (exclude - packageName).forEach { pkg ->
+                        try {
+                            addDisallowedApplication(pkg)
+                        } catch (_: Exception) {
+                            Log.d("VpnService", "addDisallowedApplication failed: $pkg")
+                        }
+                    }
+                }
+                else -> options.accessControl.let { accessControl ->
+                    if (accessControl.enable) {
+                        when (accessControl.mode) {
+                            AccessControlMode.acceptSelected -> {
+                                (accessControl.acceptList + packageName).forEach {
+                                    try {
+                                        addAllowedApplication(it)
+                                    } catch (_: Exception) {
+                                        Log.d("VpnService", "addAllowedApplication failed: $it")
+                                    }
+                                }
+                            }
 
-                        AccessControlMode.rejectSelected -> {
-                            (accessControl.rejectList - packageName).forEach {
-                                addDisallowedApplication(it)
+                            AccessControlMode.rejectSelected -> {
+                                (accessControl.rejectList - packageName).forEach {
+                                    try {
+                                        addDisallowedApplication(it)
+                                    } catch (_: Exception) {
+                                        Log.d("VpnService", "addDisallowedApplication failed: $it")
+                                    }
+                                }
                             }
                         }
                     }

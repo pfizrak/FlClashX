@@ -795,41 +795,46 @@ class _AddRuleDialogState extends State<AddRuleDialog> {
                   const SizedBox(
                     height: 24,
                   ),
-                  _ruleAction == RuleAction.RULE_SET
-                      ? FormField(
-                          validator: (_) {
-                            if (_ruleProviderController.text.isEmpty) {
-                              return appLocalizations
-                                  .emptyTip(appLocalizations.ruleProviders);
-                            }
-                            return null;
-                          },
-                          builder: (field) => DropdownMenu(
-                              expandedInsets: EdgeInsets.zero,
-                              controller: _ruleProviderController,
-                              label: Text(appLocalizations.ruleProviders),
-                              menuHeight: 250,
-                              errorText: field.errorText,
-                              dropdownMenuEntries: _ruleProviderItems,
-                            ),
-                        )
-                      : TextFormField(
-                          controller: _contentController,
-                          decoration: InputDecoration(
-                            border: const OutlineInputBorder(),
-                            labelText: appLocalizations.content,
-                          ),
-                          validator: (_) {
-                            if (_contentController.text.isEmpty) {
-                              return appLocalizations
-                                  .emptyTip(appLocalizations.content);
-                            }
-                            return null;
-                          },
-                        ),
-                  const SizedBox(
-                    height: 24,
-                  ),
+                  if (_ruleAction == RuleAction.RULE_SET) ...[
+                    FormField(
+                      validator: (_) {
+                        if (_ruleProviderController.text.isEmpty) {
+                          return appLocalizations
+                              .emptyTip(appLocalizations.ruleProviders);
+                        }
+                        return null;
+                      },
+                      builder: (field) => DropdownMenu(
+                        expandedInsets: EdgeInsets.zero,
+                        controller: _ruleProviderController,
+                        label: Text(appLocalizations.ruleProviders),
+                        menuHeight: 250,
+                        errorText: field.errorText,
+                        dropdownMenuEntries: _ruleProviderItems,
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                  ] else if (_ruleAction != RuleAction.MATCH) ...[
+                    TextFormField(
+                      controller: _contentController,
+                      decoration: InputDecoration(
+                        border: const OutlineInputBorder(),
+                        labelText: appLocalizations.content,
+                      ),
+                      validator: (_) {
+                        if (_contentController.text.isEmpty) {
+                          return appLocalizations
+                              .emptyTip(appLocalizations.content);
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(
+                      height: 24,
+                    ),
+                  ],
                   _ruleAction == RuleAction.SUB_RULE
                       ? FormField(
                           validator: (_) {

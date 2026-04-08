@@ -153,17 +153,24 @@ func removeTunHook() {
 func handleGetAndroidVpnOptions() string {
 	tunLock.Lock()
 	defer tunLock.Unlock()
+	mixedPort := currentConfig.General.MixedPort
+	// With the HTTP/SOCKS inbound disabled there is no proxy endpoint to
+	// advertise via VpnService.setHttpProxy — force it off so Android doesn't
+	// end up with a ProxyInfo pointing at 127.0.0.1:0.
+	systemProxy := state.CurrentState.VpnProps.SystemProxy && mixedPort != 0
 	options := state.AndroidVpnOptions{
 		Enable:           state.CurrentState.VpnProps.Enable,
-		Port:             currentConfig.General.MixedPort,
+		Port:             mixedPort,
 		Ipv4Address:      state.DefaultIpv4Address,
 		Ipv6Address:      state.GetIpv6Address(),
 		AccessControl:    state.CurrentState.VpnProps.AccessControl,
-		SystemProxy:      state.CurrentState.VpnProps.SystemProxy,
+		SystemProxy:      systemProxy,
 		AllowBypass:      state.CurrentState.VpnProps.AllowBypass,
 		RouteAddress:     currentConfig.General.Tun.RouteAddress,
 		BypassDomain:     state.CurrentState.BypassDomain,
 		DnsServerAddress: state.GetDnsServerAddress(),
+		IncludePackage:   currentConfig.General.Tun.IncludePackage,
+		ExcludePackage:   currentConfig.General.Tun.ExcludePackage,
 	}
 	data, err := json.Marshal(options)
 	if err != nil {

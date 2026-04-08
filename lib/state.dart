@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:ffi' show Pointer;
+import 'dart:io' show Platform;
 
 import 'package:animations/animations.dart';
 import 'package:dio/dio.dart';
@@ -401,6 +402,21 @@ class GlobalState {
       }
       if (rawConfig["mixed-port"] == null) {
         rawConfig["mixed-port"] = realPatchConfig.mixedPort;
+      }
+    }
+
+    // flclashx-androidsecure header: when set to "true" on Android, force
+    // mixed-port = 0 so the HTTP/SOCKS inbound is disabled and traffic can
+    // only leave through the VpnService/TUN. Applied as a final override
+    // regardless of overrideNetworkSettings or UI-configured port, because
+    // the header expresses an explicit policy from the subscription provider
+    // that should not be overridable from the app side. No-op on other
+    // platforms — desktop TUN gating is handled separately.
+    if (Platform.isAndroid) {
+      final secureHeader =
+          profile.providerHeaders['flclashx-androidsecure']?.trim().toLowerCase();
+      if (secureHeader == 'true') {
+        rawConfig["mixed-port"] = 0;
       }
     }
     

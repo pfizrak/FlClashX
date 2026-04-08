@@ -135,8 +135,12 @@ class Vpn {
 
   final ObserverList<VpnListener> _listeners = ObserverList<VpnListener>();
 
-  Future<bool?> start(AndroidVpnOptions options) async => methodChannel.invokeMethod<bool>("start", {
-      'data': json.encode(options),
+  /// Accepts the raw JSON string produced by the Go core so that fields the
+  /// Dart [AndroidVpnOptions] model doesn't know about (e.g. includePackage /
+  /// excludePackage injected from profile `tun` config) still make it through
+  /// to the Kotlin VpnService unchanged.
+  Future<bool?> start(String optionsJson) async => methodChannel.invokeMethod<bool>("start", {
+      'data': optionsJson,
     });
 
   Future<bool?> stop() async => methodChannel.invokeMethod<bool>("stop");

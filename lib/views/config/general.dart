@@ -1,3 +1,5 @@
+import 'dart:io' show Platform;
+
 import 'package:flclashx/common/common.dart';
 import 'package:flclashx/enum/enum.dart';
 import 'package:flclashx/models/models.dart';
@@ -219,13 +221,31 @@ class PortItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // flclashx-androidsecure header forces mixed-port=0 on Android. The port
+    // field becomes meaningless in that case, so hide it entirely rather than
+    // showing a disabled "0" row the user can't do anything about.
+    if (Platform.isAndroid) {
+      final secure = ref.watch(
+        currentProfileProvider.select(
+          (p) =>
+              p?.providerHeaders['flclashx-androidsecure']
+                  ?.trim()
+                  .toLowerCase() ==
+              'true',
+        ),
+      );
+      if (secure) {
+        return const SizedBox.shrink();
+      }
+    }
+
     final mixedPort =
         ref.watch(patchClashConfigProvider.select((state) => state.mixedPort));
     final overrideNetworkSettings = ref.watch(
       appSettingProvider.select((state) => state.overrideNetworkSettings),
     );
     final isEnabled = overrideNetworkSettings;
-    
+
     return AbsorbPointer(
       absorbing: !isEnabled,
       child: Opacity(
@@ -757,6 +777,9 @@ class _PortDialogState extends ConsumerState<_PortDialog> {
                     if (port == null) {
                       return appLocalizations
                           .numberTip(appLocalizations.mixedPort);
+                    }
+                    if (port == 0) {
+                      return null;
                     }
                     if (port < 1024 || port > 49151) {
                       return appLocalizations

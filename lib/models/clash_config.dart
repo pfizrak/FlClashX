@@ -390,7 +390,10 @@ class ParsedRule with _$ParsedRule {
 extension ParsedRuleExt on ParsedRule {
   String get value => [
       ruleAction.value,
-      ruleAction == RuleAction.RULE_SET ? ruleProvider : content,
+      if (ruleAction == RuleAction.RULE_SET)
+        ruleProvider
+      else if (ruleAction != RuleAction.MATCH)
+        content,
       ruleAction == RuleAction.SUB_RULE ? subRule : ruleTarget,
       if (ruleAction.hasParams) ...[
         if (src) "src",
