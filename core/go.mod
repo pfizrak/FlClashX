@@ -2,10 +2,8 @@ module core
 
 go 1.20
 
-replace github.com/metacubex/mihomo => ./Clash.Meta
-
 require (
-	github.com/metacubex/mihomo v0.0.0-00010101000000-000000000000
+	github.com/metacubex/mihomo v1.19.23
 	golang.org/x/sync v0.11.0
 )
 

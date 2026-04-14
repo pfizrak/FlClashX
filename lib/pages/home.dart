@@ -107,6 +107,15 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
     } else {
       _pageController.jumpToPage(index);
     }
+    if (!mounted) {
+      return;
+    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) {
+        return;
+      }
+      FocusManager.instance.primaryFocus?.unfocus();
+    });
   }
 
   _updatePageController() {
@@ -123,26 +132,21 @@ class _HomePageViewState extends ConsumerState<_HomePageView> {
   @override
   Widget build(BuildContext context) {
     final navigationItems = ref.watch(currentNavigationsStateProvider).value;
+    final currentLabel = ref.watch(currentPageLabelProvider);
     return PageView.builder(
       controller: _pageController,
       physics: const NeverScrollableScrollPhysics(),
       itemCount: navigationItems.length,
-      // onPageChanged: (index) {
-      //   debouncer.call(DebounceTag.pageChange, () {
-      //     WidgetsBinding.instance.addPostFrameCallback((_) {
-      //       if (_pageIndex != index) {
-      //         final pageLabel = navigationItems[index].label;
-      //         _toPage(pageLabel, true);
-      //       }
-      //     });
-      //   });
-      // },
       itemBuilder: (_, index) {
         final navigationItem = navigationItems[index];
-        return KeepScope(
-          keep: navigationItem.keep,
-          key: Key(navigationItem.label.name),
-          child: navigationItem.view,
+        final isActive = navigationItem.label == currentLabel;
+        return ExcludeFocus(
+          excluding: !isActive,
+          child: KeepScope(
+            keep: navigationItem.keep,
+            key: Key(navigationItem.label.name),
+            child: navigationItem.view,
+          ),
         );
       },
     );
