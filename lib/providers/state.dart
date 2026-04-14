@@ -105,10 +105,9 @@ CoreState coreState(Ref ref) {
     vpnProps = vpnProps.copyWith(systemProxy: false);
   }
   final currentProfile = ref.watch(currentProfileProvider);
-  final onlyStatisticsProxy = ref.watch(appSettingProvider).onlyStatisticsProxy;
   return CoreState(
     vpnProps: vpnProps,
-    onlyStatisticsProxy: onlyStatisticsProxy,
+    onlyStatisticsProxy: false,
     currentProfileName: currentProfile?.label ?? currentProfile?.id ?? "",
   );
 }

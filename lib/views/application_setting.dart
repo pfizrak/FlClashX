@@ -443,7 +443,6 @@ class ApplicationSettingView extends StatelessWidget {
       AnimateTabItem(),
       OpenLogsItem(),
       CloseConnectionsItem(),
-      UsageItem(),
       AutoCheckUpdateItem(),
       if (system.isDesktop) ...[
         Padding(

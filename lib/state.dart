@@ -21,6 +21,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'common/common.dart';
 import 'controller.dart';
+import 'core_version.dart';
 import 'models/models.dart';
 
 typedef UpdateTasks = List<FutureOr Function()>;
@@ -68,7 +69,9 @@ class GlobalState {
 
   Future<void> initApp(int version) async {
     coreSHA256 = const String.fromEnvironment("CORE_SHA256");
-    coreVersion = const String.fromEnvironment("CORE_VERSION");
+    final coreVersionEnv = const String.fromEnvironment("CORE_VERSION");
+    coreVersion =
+        coreVersionEnv.isEmpty ? kCoreVersionFromSource : coreVersionEnv;
     isPre = const String.fromEnvironment("APP_ENV") != 'stable';
     appState = AppState(
       version: version,
@@ -282,7 +285,7 @@ class GlobalState {
     final currentProfile = config.currentProfile;
     return CoreState(
       vpnProps: config.vpnProps,
-      onlyStatisticsProxy: config.appSetting.onlyStatisticsProxy,
+      onlyStatisticsProxy: false,
       currentProfileName: currentProfile?.label ?? currentProfile?.id ?? "",
       bypassDomain: config.networkProps.bypassDomain,
     );

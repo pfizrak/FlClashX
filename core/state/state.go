@@ -37,15 +37,13 @@ type AndroidVpnRawOptions struct {
 }
 
 type State struct {
-	VpnProps            AndroidVpnRawOptions `json:"vpn-props"`
-	CurrentProfileName  string               `json:"current-profile-name"`
-	OnlyStatisticsProxy bool                 `json:"only-statistics-proxy"`
-	BypassDomain        []string             `json:"bypass-domain"`
+	VpnProps           AndroidVpnRawOptions `json:"vpn-props"`
+	CurrentProfileName string               `json:"current-profile-name"`
+	BypassDomain       []string             `json:"bypass-domain"`
 }
 
 var CurrentState = &State{
-	OnlyStatisticsProxy: false,
-	CurrentProfileName:  "",
+	CurrentProfileName: "",
 }
 
 func GetIpv6Address() string {
