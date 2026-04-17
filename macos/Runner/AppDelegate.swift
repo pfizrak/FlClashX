@@ -73,7 +73,7 @@ class AppDelegate: FlutterAppDelegate {
         
         let bundleURL = Bundle.main.bundleURL
         let bundleCorePath = bundleURL.appendingPathComponent("Contents/MacOS/FlClashCore")
-        let appSupportCorePath = appSupportURL.appendingPathComponent("com.follow.clash/cores/FlClashCore")
+        let appSupportCorePath = appSupportURL.appendingPathComponent("io.github.pfizrak.flclashx/cores/FlClashCore")
         let appSupportDir = appSupportCorePath.deletingLastPathComponent()
         
         do {

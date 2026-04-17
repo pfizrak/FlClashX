@@ -1,4 +1,4 @@
-package com.follow.clashx;
+package io.github.pfizrak.flclashx;
 
 import android.app.Application
 import android.content.Context

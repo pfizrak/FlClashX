@@ -1,4 +1,4 @@
-package com.follow.clashx
+package io.github.pfizrak.flclashx
 
 import android.database.Cursor
 import android.database.MatrixCursor

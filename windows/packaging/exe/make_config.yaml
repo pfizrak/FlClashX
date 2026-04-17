@@ -1,8 +1,8 @@
 script_template: inno_setup.iss
-app_id: 728B3532-C74B-4870-9068-BE70FE12A3E6
+app_id: D2328B63-29DD-4BD2-BEDD-E6E16F67F06B
 app_name: FlClashX
-publisher: pluralplay
-publisher_url: https://github.com/pluralplay/FlClashX
+publisher: pfizrak
+publisher_url: https://github.com/pfizrak/FlClashX
 display_name: FlClashX
 executable_name: FlClashX.exe
 output_base_file_name: FlClashX.exe

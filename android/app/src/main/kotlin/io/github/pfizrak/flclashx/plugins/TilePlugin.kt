@@ -1,4 +1,4 @@
-package com.follow.clashx.plugins
+package io.github.pfizrak.flclashx.plugins
 
 import android.util.Log
 import io.flutter.embedding.engine.plugins.FlutterPlugin
@@ -104,7 +104,7 @@ class TilePlugin : FlutterPlugin, MethodChannel.MethodCallHandler {
     private fun updateTile() {
         Log.d(TAG, "updateTile: syncing status")
         // Force tile service to refresh its state
-        com.follow.clashx.GlobalState.syncStatus()
+        io.github.pfizrak.flclashx.GlobalState.syncStatus()
     }
     
     private fun handleServiceReady() {

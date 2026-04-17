@@ -1,7 +1,7 @@
-package com.follow.clashx.plugins
+package io.github.pfizrak.flclashx.plugins
 
-import com.follow.clashx.GlobalState
-import com.follow.clashx.models.VpnOptions
+import io.github.pfizrak.flclashx.GlobalState
+import io.github.pfizrak.flclashx.models.VpnOptions
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall

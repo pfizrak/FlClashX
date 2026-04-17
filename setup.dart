@@ -369,7 +369,7 @@ class Build {
     final targetPath = join(
       outDir,
       target.name,
-      "FlClashHelperService${target.executableExtensionName}",
+      "FlClashHelperServicePfizrak${target.executableExtensionName}",
     );
     await File(outPath).copy(targetPath);
   }

@@ -1,4 +1,4 @@
-package com.follow.clashx.core
+package io.github.pfizrak.flclashx.core
 
 import androidx.annotation.Keep
 

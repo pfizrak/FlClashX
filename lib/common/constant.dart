@@ -9,11 +9,11 @@ import 'package:flclashx/models/models.dart';
 import 'package:flutter/material.dart';
 
 const appName = "FlClashX";
-const appHelperService = "FlClashHelperService";
+const appHelperService = "FlClashHelperServicePfizrak";
 const coreName = "clashx.meta";
 const browserUa =
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
-const packageName = "com.follow.clashx";
+const packageName = "io.github.pfizrak.flclashx";
 final unixSocketPath = "/tmp/FlClashXSocket_${Random().nextInt(10000)}.sock";
 const helperPort = 47890;
 const maxTextScale = 1.4;
@@ -45,7 +45,7 @@ const localhost = "127.0.0.1";
 const clashConfigKey = "clash_config";
 const configKey = "config";
 const double dialogCommonWidth = 300;
-const repository = "pluralplay/FlClashX";
+const repository = "pfizrak/FlClashX";
 const defaultExternalController = "127.0.0.1:9090";
 const maxMobileWidth = 600;
 const maxLaptopWidth = 840;

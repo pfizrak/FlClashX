@@ -14,9 +14,9 @@ class Window {
       exit(0);
     }
     if (Platform.isWindows) {
-      protocol.register("clashx");
-      protocol.register("flclash");
-      protocol.register("flclashx");
+      protocol.register("pfizrak-clashx");
+      protocol.register("pfizrak-flclash");
+      protocol.register("pfizrak-flclashx");
     }
 
     // On macOS, the app runs in status bar with popover - no window manager needed

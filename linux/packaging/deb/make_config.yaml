@@ -1,8 +1,8 @@
 display_name: FlClashX
-package_name: FlClashX
+package_name: flclashx-pfizrak
 maintainer:
-  name: pluralplay
-  email: mail@pluralplay.rw
+  name: pfizrak
+  email: pfizrak@users.noreply.github.com
 
 priority: optional
 section: x11

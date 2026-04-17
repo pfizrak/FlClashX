@@ -6,9 +6,9 @@
 
 ## FlClashX
 
-[![Downloads](https://img.shields.io/github/downloads/pluralplay/FlClashX/total?style=flat-square&logo=github)](https://github.com/pluralplay/FlClashX/releases/)
-[![Last Version](https://img.shields.io/github/release/pluralplay/FlClashX/all.svg?style=flat-square)](https://github.com/pluralplay/FlClashX/releases/)
-[![License](https://img.shields.io/github/license/pluralplay/FlClashX?style=flat-square)](LICENSE)
+[![Downloads](https://img.shields.io/github/downloads/pfizrak/FlClashX/total?style=flat-square&logo=github)](https://github.com/pfizrak/FlClashX/releases/)
+[![Last Version](https://img.shields.io/github/release/pfizrak/FlClashX/all.svg?style=flat-square)](https://github.com/pfizrak/FlClashX/releases/)
+[![License](https://img.shields.io/github/license/pfizrak/FlClashX?style=flat-square)](LICENSE)
 
 [![Channel](https://img.shields.io/badge/Telegram-Chat-blue?style=flat-square&logo=telegram)](https://t.me/FlClashX)
 
@@ -213,16 +213,16 @@ flclashx-widgets: announce,metainfo,outboundModeV2,networkDetection
 Поддерживаются следующие действия:
 
 ```bash
- com.follow.clashx.action.START
+ io.github.pfizrak.flclashx.action.START
 
- com.follow.clashx.action.STOP
+ io.github.pfizrak.flclashx.action.STOP
 
- com.follow.clashx.action.CHANGE
+ io.github.pfizrak.flclashx.action.CHANGE
 ```
 
 ## Скачать
 
-<a href="https://github.com/pluralplay/FlClashX/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
+<a href="https://github.com/pfizrak/FlClashX/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
 
 ## Star
 

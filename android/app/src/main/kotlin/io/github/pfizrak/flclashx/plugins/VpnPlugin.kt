@@ -1,4 +1,4 @@
-package com.follow.clashx.plugins
+package io.github.pfizrak.flclashx.plugins
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -16,17 +16,17 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import androidx.core.content.getSystemService
-import com.follow.clashx.FlClashXApplication
-import com.follow.clashx.GlobalState
-import com.follow.clashx.RunState
-import com.follow.clashx.core.Core
-import com.follow.clashx.extensions.awaitResult
-import com.follow.clashx.extensions.resolveDns
-import com.follow.clashx.models.StartForegroundParams
-import com.follow.clashx.models.VpnOptions
-import com.follow.clashx.services.BaseServiceInterface
-import com.follow.clashx.services.FlClashXService
-import com.follow.clashx.services.FlClashXVpnService
+import io.github.pfizrak.flclashx.FlClashXApplication
+import io.github.pfizrak.flclashx.GlobalState
+import io.github.pfizrak.flclashx.RunState
+import io.github.pfizrak.flclashx.core.Core
+import io.github.pfizrak.flclashx.extensions.awaitResult
+import io.github.pfizrak.flclashx.extensions.resolveDns
+import io.github.pfizrak.flclashx.models.StartForegroundParams
+import io.github.pfizrak.flclashx.models.VpnOptions
+import io.github.pfizrak.flclashx.services.BaseServiceInterface
+import io.github.pfizrak.flclashx.services.FlClashXService
+import io.github.pfizrak.flclashx.services.FlClashXVpnService
 import com.google.gson.Gson
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.plugin.common.MethodCall

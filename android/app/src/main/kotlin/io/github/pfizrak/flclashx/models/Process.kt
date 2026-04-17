@@ -1,4 +1,4 @@
-package com.follow.clashx.models
+package io.github.pfizrak.flclashx.models
 
 data class Process(
     val id: String,
