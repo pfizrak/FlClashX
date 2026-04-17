@@ -172,26 +172,27 @@ class Utils {
   }
 
   int compareVersions(String version1, String version2) {
-    final v1 = version1.split('+')[0].split('.');
-    final v2 = version2.split('+')[0].split('.');
-    final major1 = int.parse(v1[0]);
-    final major2 = int.parse(v2[0]);
-    if (major1 != major2) {
-      return major1.compareTo(major2);
+    try {
+      final left = _ComparableVersion.parse(version1);
+      final right = _ComparableVersion.parse(version2);
+
+      final majorCompare = left.major.compareTo(right.major);
+      if (majorCompare != 0) return majorCompare;
+
+      final minorCompare = left.minor.compareTo(right.minor);
+      if (minorCompare != 0) return minorCompare;
+
+      final patchCompare = left.patch.compareTo(right.patch);
+      if (patchCompare != 0) return patchCompare;
+
+      final preReleaseCompare =
+          _compareVersionIdentifiers(left.preRelease, right.preRelease);
+      if (preReleaseCompare != 0) return preReleaseCompare;
+
+      return _compareVersionIdentifiers(left.build, right.build);
+    } catch (_) {
+      return version1.compareTo(version2);
     }
-    final minor1 = v1.length > 1 ? int.parse(v1[1]) : 0;
-    final minor2 = v2.length > 1 ? int.parse(v2[1]) : 0;
-    if (minor1 != minor2) {
-      return minor1.compareTo(minor2);
-    }
-    final patch1 = v1.length > 2 ? int.parse(v1[2]) : 0;
-    final patch2 = v2.length > 2 ? int.parse(v2[2]) : 0;
-    if (patch1 != patch2) {
-      return patch1.compareTo(patch2);
-    }
-    final build1 = version1.contains('+') ? int.parse(version1.split('+')[1]) : 0;
-    final build2 = version2.contains('+') ? int.parse(version2.split('+')[1]) : 0;
-    return build1.compareTo(build2);
   }
 
   String getPinyin(String value) => value.isNotEmpty
@@ -398,6 +399,76 @@ class Utils {
     }
     return await function();
   }
+}
+
+class _ComparableVersion {
+  const _ComparableVersion({
+    required this.major,
+    required this.minor,
+    required this.patch,
+    required this.preRelease,
+    required this.build,
+  });
+
+  factory _ComparableVersion.parse(String rawVersion) {
+    final normalized = rawVersion.trim().replaceFirst(RegExp(r'^[vV]'), '');
+    final match = RegExp(
+      r'^(\d+)(?:\.(\d+))?(?:\.(\d+))?(?:-([0-9A-Za-z.-]+))?(?:\+([0-9A-Za-z.-]+))?$',
+    ).firstMatch(normalized);
+    if (match == null) {
+      throw FormatException('Invalid version: $rawVersion');
+    }
+    return _ComparableVersion(
+      major: int.parse(match.group(1)!),
+      minor: int.parse(match.group(2) ?? '0'),
+      patch: int.parse(match.group(3) ?? '0'),
+      preRelease: _splitVersionIdentifiers(match.group(4)),
+      build: _splitVersionIdentifiers(match.group(5)),
+    );
+  }
+
+  final int major;
+  final int minor;
+  final int patch;
+  final List<String> preRelease;
+  final List<String> build;
+}
+
+List<String> _splitVersionIdentifiers(String? value) => value == null
+    ? const []
+    : value
+        .split('.')
+        .map((segment) => segment.trim())
+        .where((segment) => segment.isNotEmpty)
+        .toList();
+
+int _compareVersionIdentifiers(List<String> left, List<String> right) {
+  if (left.isEmpty && right.isEmpty) return 0;
+  if (left.isEmpty) return 1;
+  if (right.isEmpty) return -1;
+
+  final maxLength = max(left.length, right.length);
+  for (var index = 0; index < maxLength; index++) {
+    if (index >= left.length) return -1;
+    if (index >= right.length) return 1;
+
+    final leftPart = left[index];
+    final rightPart = right[index];
+    final leftNumber = int.tryParse(leftPart);
+    final rightNumber = int.tryParse(rightPart);
+
+    if (leftNumber != null && rightNumber != null) {
+      final compare = leftNumber.compareTo(rightNumber);
+      if (compare != 0) return compare;
+      continue;
+    }
+    if (leftNumber != null) return -1;
+    if (rightNumber != null) return 1;
+
+    final compare = leftPart.compareTo(rightPart);
+    if (compare != 0) return compare;
+  }
+  return 0;
 }
 
 final utils = Utils();

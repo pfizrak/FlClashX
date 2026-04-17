@@ -1192,6 +1192,22 @@ final backgroundUrlProvider = AutoDisposeProvider<String?>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef BackgroundUrlRef = AutoDisposeProviderRef<String?>;
+String _$devModeEnabledHash() => r'0000000000000000000000000000000000000000';
+
+/// See also [devModeEnabled].
+@ProviderFor(devModeEnabled)
+final devModeEnabledProvider = AutoDisposeProvider<bool>.internal(
+  devModeEnabled,
+  name: r'devModeEnabledProvider',
+  debugGetCreateSourceHash:
+      const bool.fromEnvironment('dart.vm.product') ? null : _$devModeEnabledHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+@Deprecated('Will be removed in 3.0. Use Ref instead')
+// ignore: unused_element
+typedef DevModeEnabledRef = AutoDisposeProviderRef<bool>;
 String _$getProxiesColumnsHash() => r'725066b5fc21f590a4c2656a1fd5e14ab7079079';
 
 /// See also [getProxiesColumns].

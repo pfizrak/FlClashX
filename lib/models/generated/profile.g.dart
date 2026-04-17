@@ -55,6 +55,9 @@ _$ProfileImpl _$$ProfileImplFromJson(Map<String, dynamic> json) =>
             (k, e) => MapEntry(k, e as String),
           ) ??
           const {},
+      devOverrideHwid: json['devOverrideHwid'] as String?,
+      devOverrideUa: json['devOverrideUa'] as String?,
+      useRealDevIdentity: json['useRealDevIdentity'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
@@ -71,6 +74,9 @@ Map<String, dynamic> _$$ProfileImplToJson(_$ProfileImpl instance) =>
       'unfoldSet': instance.unfoldSet.toList(),
       'overrideData': instance.overrideData,
       'providerHeaders': instance.providerHeaders,
+      'devOverrideHwid': instance.devOverrideHwid,
+      'devOverrideUa': instance.devOverrideUa,
+      'useRealDevIdentity': instance.useRealDevIdentity,
     };
 
 _$OverrideDataImpl _$$OverrideDataImplFromJson(Map<String, dynamic> json) =>

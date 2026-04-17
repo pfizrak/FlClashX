@@ -29,13 +29,26 @@ class _EditProfileViewState extends State<EditProfileView> {
   late TextEditingController labelController;
   late TextEditingController urlController;
   late TextEditingController autoUpdateDurationController;
+  late TextEditingController devHwidController;
+  late TextEditingController devUaController;
   late bool autoUpdate;
+  late bool useRealDevIdentity;
   String? rawText;
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final fileInfoNotifier = ValueNotifier<FileInfo?>(null);
   Uint8List? fileData;
 
   Profile get profile => widget.profile;
+
+  bool get _isDevMode {
+    final appSetting = globalState.config.appSetting;
+    final profileDriven = globalState.config.profiles.any(
+      (p) =>
+          p.providerHeaders['flclashx-devmode']?.trim().toLowerCase() ==
+          'true',
+    );
+    return appSetting.developerMode || profileDriven;
+  }
 
   @override
   void initState() {
@@ -46,6 +59,13 @@ class _EditProfileViewState extends State<EditProfileView> {
     autoUpdateDurationController = TextEditingController(
       text: widget.profile.autoUpdateDuration.inMinutes.toString(),
     );
+    devHwidController = TextEditingController(
+      text: widget.profile.devOverrideHwid ?? '',
+    );
+    devUaController = TextEditingController(
+      text: widget.profile.devOverrideUa ?? '',
+    );
+    useRealDevIdentity = widget.profile.useRealDevIdentity;
     appPath.getProfilePath(widget.profile.id).then((path) async {
       fileInfoNotifier.value = await _getFileInfo(path);
     });
@@ -54,6 +74,8 @@ class _EditProfileViewState extends State<EditProfileView> {
   Future<void> _handleConfirm() async {
     if (!_formKey.currentState!.validate()) return;
     final appController = globalState.appController;
+    final devHwid = devHwidController.text.trim();
+    final devUa = devUaController.text.trim();
     var profile = this.profile.copyWith(
           url: urlController.text,
           label: labelController.text,
@@ -63,6 +85,9 @@ class _EditProfileViewState extends State<EditProfileView> {
               autoUpdateDurationController.text,
             ),
           ),
+          devOverrideHwid: devHwid.isEmpty ? null : devHwid,
+          devOverrideUa: devUa.isEmpty ? null : devUa,
+          useRealDevIdentity: useRealDevIdentity,
         );
     final hasUpdate = widget.profile.url != profile.url;
     if (fileData != null) {
@@ -103,6 +128,13 @@ class _EditProfileViewState extends State<EditProfileView> {
     if (autoUpdate == value) return;
     setState(() {
       autoUpdate = value;
+    });
+  }
+
+  void _setUseRealDevIdentity(bool value) {
+    if (useRealDevIdentity == value) return;
+    setState(() {
+      useRealDevIdentity = value;
     });
   }
 
@@ -328,6 +360,62 @@ class _EditProfileViewState extends State<EditProfileView> {
                   ),
           ),
       ),
+      if (_isDevMode) ...[
+        const Divider(height: 32),
+        Padding(
+          padding: const EdgeInsets.only(left: 4, bottom: 8),
+          child: Text(
+            'Developer Overrides',
+            style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+          ),
+        ),
+        ListItem.switchItem(
+          title: const Text('Use real HWID / User-Agent'),
+          subtitle: const Text(
+            'Ignore developer override values for this profile',
+          ),
+          delegate: SwitchDelegate<bool>(
+            value: useRealDevIdentity,
+            onChanged: _setUseRealDevIdentity,
+          ),
+        ),
+        Opacity(
+          opacity: useRealDevIdentity ? 0.5 : 1,
+          child: IgnorePointer(
+            ignoring: useRealDevIdentity,
+            child: ListItem(
+              title: TextFormField(
+                controller: devHwidController,
+                enabled: !useRealDevIdentity,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Override HWID',
+                  hintText: 'Leave empty to use global/real HWID',
+                ),
+              ),
+            ),
+          ),
+        ),
+        Opacity(
+          opacity: useRealDevIdentity ? 0.5 : 1,
+          child: IgnorePointer(
+            ignoring: useRealDevIdentity,
+            child: ListItem(
+              title: TextFormField(
+                controller: devUaController,
+                enabled: !useRealDevIdentity,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  labelText: 'Override User-Agent',
+                  hintText: 'Leave empty to use global/real UA',
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
     ];
     return CommonPopScope(
       onPop: () {

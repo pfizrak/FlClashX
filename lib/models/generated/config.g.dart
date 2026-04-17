@@ -27,6 +27,8 @@ _$AppSettingPropsImpl _$$AppSettingPropsImplFromJson(
       minimizeOnExit: json['minimizeOnExit'] as bool? ?? false,
       hidden: json['hidden'] as bool? ?? false,
       developerMode: json['developerMode'] as bool? ?? false,
+      devOverrideHwid: json['devOverrideHwid'] as String?,
+      devOverrideUa: json['devOverrideUa'] as String?,
       overrideProviderSettings:
           json['overrideProviderSettings'] as bool? ?? false,
       overrideNetworkSettings:
@@ -57,6 +59,8 @@ Map<String, dynamic> _$$AppSettingPropsImplToJson(
       'minimizeOnExit': instance.minimizeOnExit,
       'hidden': instance.hidden,
       'developerMode': instance.developerMode,
+      'devOverrideHwid': instance.devOverrideHwid,
+      'devOverrideUa': instance.devOverrideUa,
       'overrideProviderSettings': instance.overrideProviderSettings,
       'overrideNetworkSettings': instance.overrideNetworkSettings,
       'recoveryStrategy': _$RecoveryStrategyEnumMap[instance.recoveryStrategy]!,

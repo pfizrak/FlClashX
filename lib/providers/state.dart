@@ -503,6 +503,16 @@ String? backgroundUrl(Ref ref) {
 }
 
 @riverpod
+bool devModeEnabled(Ref ref) {
+  final profiles = ref.watch(profilesProvider);
+  return profiles.any(
+    (profile) =>
+        profile.providerHeaders['flclashx-devmode']?.trim().toLowerCase() ==
+        'true',
+  );
+}
+
+@riverpod
 int getProxiesColumns(Ref ref) {
   final viewWidth = ref.watch(viewWidthProvider);
   final proxiesLayout =

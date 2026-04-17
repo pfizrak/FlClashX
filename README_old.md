@@ -10,8 +10,6 @@
 [![Last Version](https://img.shields.io/github/release/pfizrak/FlClashX/all.svg?style=flat-square)](https://github.com/pfizrak/FlClashX/releases/)
 [![License](https://img.shields.io/github/license/pfizrak/FlClashX?style=flat-square)](LICENSE)
 
-[![Channel](https://img.shields.io/badge/Telegram-Chat-blue?style=flat-square&logo=telegram)](https://t.me/FlClashX)
-
 Форк многоплатформенного прокси-клиента FlClash на основе ClashMeta, простого и удобного в использовании, с открытым исходным кодом и без рекламы.
 
 Десктопный вид:
@@ -223,11 +221,5 @@ flclashx-widgets: announce,metainfo,outboundModeV2,networkDetection
 ## Скачать
 
 <a href="https://github.com/pfizrak/FlClashX/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
-
-## Star
-
-<p style="text-align: center;">
-Самый простой способ поддержать разработчиков — нажать на звездочку (⭐) в верхней части страницы.<br>
-Если хотите поддержать копеечкой, то можно <a href="https://t.me/tribute/app?startapp=dtyh">сделать это тут.</a></p>
 
 **TON USDT:** `UQDSfrJ_k1BdsknhdR_zj4T3Is3OdMylD8PnDJ9mxO35i-TE`

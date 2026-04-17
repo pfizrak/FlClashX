@@ -11,6 +11,19 @@ import 'package:flclashx/state.dart';
 import 'package:flutter/cupertino.dart';
 
 class Request {
+  static const stableUpdateChannel = 'stable';
+  static const _previewUpdateChannels = {
+    'preview',
+    'prerelease',
+    'pre-release',
+    'pre',
+    'beta',
+    'alpha',
+    'rc',
+    'nightly',
+    'canary',
+    'next',
+  };
 
   Request() {
     _dio = Dio(
@@ -33,6 +46,33 @@ class Request {
   late final Dio _dio;
   late final Dio _clashDio;
   String? userAgent;
+
+  Iterable<String> get configuredUpdateChannels => globalState.config.profiles
+      .map((profile) => profile.providerHeaders)
+      .map(
+        (headers) =>
+            headers['update-channel'] ?? headers['flclashx-update-channel'],
+      )
+      .whereType<String>()
+      .map((channel) => channel.trim().toLowerCase())
+      .where((channel) => channel.isNotEmpty);
+
+  String get currentUpdateChannel {
+    for (final channel in configuredUpdateChannels) {
+      if (_previewUpdateChannels.contains(channel)) {
+        return channel;
+      }
+    }
+    for (final channel in configuredUpdateChannels) {
+      if (channel != stableUpdateChannel) {
+        return channel;
+      }
+    }
+    return stableUpdateChannel;
+  }
+
+  bool get usesPreviewUpdateChannel =>
+      _previewUpdateChannels.contains(currentUpdateChannel);
 
   Future<Response<Uint8List>> getFileResponseForUrl(
     String url, {
@@ -96,19 +136,52 @@ class Request {
     return MemoryImage(data);
   }
 
-  Future<Map<String, dynamic>?> checkForUpdate() async {
-    final response = await _dio.get(
+  Future<Map<String, dynamic>?> _fetchLatestStableRelease() async {
+    final response = await _dio.get<Map<String, dynamic>>(
       "https://api.github.com/repos/$repository/releases/latest",
       options: Options(
         responseType: ResponseType.json,
       ),
     );
-    if (response.statusCode != 200) return null;
-    final data = response.data as Map<String, dynamic>;
-    final remoteVersion = data['tag_name'];
+    if (response.statusCode != 200 || response.data == null) return null;
+    return response.data;
+  }
+
+  Future<Map<String, dynamic>?> _fetchLatestPreviewRelease() async {
+    final response = await _dio.get<List<dynamic>>(
+      "https://api.github.com/repos/$repository/releases",
+      queryParameters: const {
+        'per_page': 20,
+      },
+      options: Options(
+        responseType: ResponseType.json,
+      ),
+    );
+    if (response.statusCode != 200 || response.data == null) return null;
+
+    for (final release in response.data!) {
+      if (release is! Map) continue;
+      final releaseMap = Map<String, dynamic>.from(release);
+      if (releaseMap['draft'] == true) continue;
+      return releaseMap;
+    }
+    return null;
+  }
+
+  Future<Map<String, dynamic>?> fetchLatestReleaseForCurrentChannel() async {
+    return usesPreviewUpdateChannel
+        ? _fetchLatestPreviewRelease()
+        : _fetchLatestStableRelease();
+  }
+
+  Future<Map<String, dynamic>?> checkForUpdate() async {
+    final data = await fetchLatestReleaseForCurrentChannel();
+    if (data == null) return null;
+
+    final remoteVersion = data['tag_name'] as String?;
+    if (remoteVersion == null || remoteVersion.isEmpty) return null;
     final version = globalState.packageInfo.version;
-    final hasUpdate =
-        utils.compareVersions(remoteVersion.replaceAll('v', ''), version) > 0;
+    final hasUpdate = utils.compareVersions(remoteVersion, version) > 0;
     if (!hasUpdate) return null;
     return data;
   }

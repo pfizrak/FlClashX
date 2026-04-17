@@ -83,6 +83,7 @@ class _ToolboxViewState extends ConsumerState<ToolsView> {
         (state) => VM2(a: state.locale, b: state.developerMode),
       ),
     );
+    final devModeFromHeader = ref.watch(devModeEnabledProvider);
     final appLocale = AppLocalizations.of(context);
     final items = [
       Consumer(
@@ -100,7 +101,7 @@ class _ToolboxViewState extends ConsumerState<ToolsView> {
         },
       ),
       ..._getSettingList(context),
-      ..._getOtherList(context, vm2.b),
+      ..._getOtherList(context, vm2.b || devModeFromHeader),
     ];
     return ListView.builder(
       itemCount: items.length,

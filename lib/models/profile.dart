@@ -7,6 +7,7 @@ import 'package:flclashx/clash/core.dart';
 import 'package:flclashx/common/common.dart';
 import 'package:flclashx/enum/enum.dart';
 import 'package:flclashx/utils/device_info_service.dart';
+import 'package:flclashx/state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'clash_config.dart';
@@ -63,6 +64,9 @@ class Profile with _$Profile {
     @Default(false)
     bool isUpdating,
     @Default({}) Map<String, String> providerHeaders,
+    String? devOverrideHwid,
+    String? devOverrideUa,
+    @Default(false) bool useRealDevIdentity,
   }) = _Profile;
 
   factory Profile.fromJson(Map<String, Object?> json) =>
@@ -174,10 +178,29 @@ extension ProfileExtension on Profile {
       final deviceInfoService = DeviceInfoService();
       final details = await deviceInfoService.getDeviceDetails();
 
-      if (details.hwid != null) headers['x-hwid'] = details.hwid;
+      final appSetting = globalState.config.appSetting;
+      final profileDrivenDevMode = globalState.config.profiles.any(
+        (profile) =>
+            profile.providerHeaders['flclashx-devmode']?.trim().toLowerCase() ==
+            'true',
+      );
+      final isDevMode = appSetting.developerMode || profileDrivenDevMode;
+      final useRealIdentity = !isDevMode || useRealDevIdentity;
+
+      // HWID: per-profile > global > real
+      final effectiveHwid = useRealIdentity
+          ? details.hwid
+          : (devOverrideHwid ?? appSetting.devOverrideHwid ?? details.hwid);
+      // UA: per-profile > global > real (applied via request headers below)
+      final effectiveUa = useRealIdentity
+          ? globalState.ua
+          : (devOverrideUa ?? appSetting.devOverrideUa ?? globalState.ua);
+
+      if (effectiveHwid != null) headers['x-hwid'] = effectiveHwid;
       if (details.os != null) headers['x-device-os'] = details.os;
       if (details.osVersion != null) headers['x-ver-os'] = details.osVersion;
       if (details.model != null) headers['x-device-model'] = details.model;
+      headers['User-Agent'] = effectiveUa;
     }
 
     final response = await request.getFileResponseForUrl(
@@ -197,7 +220,8 @@ extension ProfileExtension on Profile {
     
     final headersToCollect = [
       'announce',
-      'support-url', 
+      'support-url',
+      'update-channel',
       'profile-update-interval',
       'x-hwid-limit',
     ];

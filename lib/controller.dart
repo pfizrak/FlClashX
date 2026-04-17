@@ -1115,12 +1115,14 @@ class AppController {
     Map<String, dynamic>? data,
     bool handleError = false,
   }) async {
-    if (globalState.isPre) {
+    if (globalState.isPre && !request.usesPreviewUpdateChannel) {
       return;
     }
     if (data != null) {
       final tagName = data['tag_name'];
       final body = data['body'];
+      final releaseUrl = data['html_url'] as String? ??
+          "https://github.com/$repository/releases/latest";
       final submits = utils.parseReleaseBody(body);
       final textTheme = context.textTheme;
       final res = await globalState.showMessage(
@@ -1146,7 +1148,7 @@ class AppController {
         return;
       }
       unawaited(launchUrl(
-        Uri.parse("https://github.com/$repository/releases/latest"),
+        Uri.parse(releaseUrl),
       ));
     } else if (handleError) {
       globalState.showMessage(

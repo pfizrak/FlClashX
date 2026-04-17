@@ -10,8 +10,6 @@
 [![Last Version](https://img.shields.io/github/release/pfizrak/FlClashX/all.svg?style=flat-square)](https://github.com/pfizrak/FlClashX/releases/)
 [![License](https://img.shields.io/github/license/pfizrak/FlClashX?style=flat-square)](LICENSE)
 
-[![Channel](https://img.shields.io/badge/Telegram-Chat-blue?style=flat-square&logo=telegram)](https://t.me/FlClashX)
-
 A fork of the multi-platform proxy client FlClash based on ClashMeta, simple and easy to use, open source and ad-free.
 
 on Desktop:
@@ -223,12 +221,5 @@ The following actions are supported:
 ## Download
 
 <a href="https://github.com/pfizrak/FlClashX/releases"><img alt="Get it on GitHub" src="snapshots/get-it-on-github.svg" width="200px"/></a>
-
-## Star
-
-<p style="text-align: center;">
-The easiest way to support the developers is to click the star (⭐) at the top of the page.<br>
-If you want to support with a small donation, you can <a href="https://t.me/tribute/app?startapp=dtyh">do so here.</a>
-</p>
 
 **TON USDT:** `UQDSfrJ_k1BdsknhdR_zj4T3Is3OdMylD8PnDJ9mxO35i-TE`
